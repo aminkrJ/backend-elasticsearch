@@ -31,14 +31,18 @@ class Search < ApplicationService
       @search_params = search_params
     end
 
-    def to_json
+    def query
       term = ElasticsearchClient::Agg::Term.new(field: 'medium', key: 'second_agg')
       histogram = ElasticsearchClient::Agg::Histogram.new(field: 'timestamp', key: 'first_agg', interval: @search_params.interval)
       filter = ElasticsearchClient::Filter::Range.new(format: "epoch_millis", start_millis: @search_params.start_millis, end_millis: @search_params.end_millis, query: @search_params.query)
       {
         aggs: histogram.merge(term),
         query: filter.to_h
-      }.to_json
+      }
+    end
+
+    def to_json
+      query.to_json
     end
   end
 end
