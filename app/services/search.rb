@@ -31,10 +31,14 @@ class Search < ApplicationService
       @search_params = search_params
     end
 
+    def to_millis(date_string)
+      DateTime.parse(date_string).strftime('%Q')
+    end
+
     def query
       term = ElasticsearchClient::Agg::Term.new(field: 'medium', key: 'second_agg')
       histogram = ElasticsearchClient::Agg::Histogram.new(field: 'timestamp', key: 'first_agg', interval: @search_params.interval)
-      filter = ElasticsearchClient::Filter::Range.new(format: "epoch_millis", start_millis: @search_params.start_millis, end_millis: @search_params.end_millis, query: @search_params.query)
+      filter = ElasticsearchClient::Filter::Range.new(format: "epoch_millis", start_millis: to_millis(@search_params.start_date), end_millis: to_millis(@search_params.end_date), query: @search_params.query)
       {
         aggs: histogram.merge(term),
         query: filter.to_h
