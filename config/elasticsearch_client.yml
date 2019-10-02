@@ -1,0 +1,4 @@
+host: 'sample.es.streem.com.au:9243'
+scheme: 'https'
+user: 'elastic'
+password: 'streem'
