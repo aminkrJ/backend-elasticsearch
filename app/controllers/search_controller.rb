@@ -1,6 +1,6 @@
 class SearchController < ApplicationController
   def results
-    result = Search.call(search_params)
+    result = Search.call(SearchParams.build(search_params))
 
     if result.success?
       render json: result.data.slice("aggregations")

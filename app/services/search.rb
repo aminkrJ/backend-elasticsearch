@@ -1,10 +1,10 @@
 class Search < ApplicationService
-  attr_reader :search_params
+  attr_accessor :search_params
 
   INDEX = 'news'
 
   def initialize(search_params)
-    @search_params = SearchParams.build(search_params)
+    @search_params = search_params
   end
 
   def call
@@ -12,14 +12,11 @@ class Search < ApplicationService
       query = SearchQuery.new(search_params).to_json
       begin
         resp = ElasticsearchClient::Search.search(INDEX, query)
-        # I can create a class for this
         OpenStruct.new(success?: true, data: resp)
       rescue StandardError => e
-        # I can create a class for this
         OpenStruct.new(success?: false, message: e.message)
       end
     else
-      # I can create a class for this
       OpenStruct.new(success?: false, message: search_params.errors.full_messages[0])
     end
   end
