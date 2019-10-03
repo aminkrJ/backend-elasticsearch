@@ -1,3 +1,4 @@
 Rails.application.routes.draw do
-  post 'results', to: 'search#results'
+  # I assumed I do not need any versioning on my side
+  post 'results', to: 'search#results', :defaults => { :format => :json }
 end
