@@ -5,7 +5,7 @@ class SearchController < ApplicationController
     if result.success?
       render json: result.response.slice("aggregations")
     else
-      render json: { message: result.message }
+      render json: result.message, status: :bad_request
     end
   end
 
