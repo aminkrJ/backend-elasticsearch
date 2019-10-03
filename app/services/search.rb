@@ -3,13 +3,8 @@ class Search < ApplicationService
 
   INDEX = 'news'
 
-  def initialize(search_params = {})
-    @search_params = SearchParams.new.tap do |p|
-      p.query = search_params[:query]
-      p.start_date = search_params[:start_date]
-      p.end_date = search_params[:end_date]
-      p.interval = search_params[:interval]
-    end
+  def initialize(search_params)
+    @search_params = SearchParams.build(search_params)
   end
 
   def call
@@ -17,11 +12,14 @@ class Search < ApplicationService
       query = SearchQuery.new(search_params).to_json
       begin
         resp = ElasticsearchClient::Search.search(INDEX, query)
-        OpenStruct.new(success?: true, response: resp)
+        # I can create a class for this
+        OpenStruct.new(success?: true, data: resp)
       rescue StandardError => e
+        # I can create a class for this
         OpenStruct.new(success?: false, message: e.message)
       end
     else
+      # I can create a class for this
       OpenStruct.new(success?: false, message: search_params.errors.full_messages[0])
     end
   end

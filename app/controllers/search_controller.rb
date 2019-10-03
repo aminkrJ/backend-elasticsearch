@@ -3,7 +3,7 @@ class SearchController < ApplicationController
     result = Search.call(search_params)
 
     if result.success?
-      render json: result.response.slice("aggregations")
+      render json: result.data.slice("aggregations")
     else
       render json: result.message, status: :bad_request
     end
